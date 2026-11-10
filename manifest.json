@@ -1,0 +1,21 @@
+{
+  "name": "Escala+ | Gestão de Escalas da Igreja",
+  "short_name": "Escala+",
+  "description": "Plataforma inteligente de escalas, voluntários e operação de cultos.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#090d16",
+  "theme_color": "#090d16",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

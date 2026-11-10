@@ -1,0 +1,25 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isAuthenticated() { return request.auth != null; }
+    function isOwner(userId) { return isAuthenticated() && request.auth.uid == userId; }
+    function getUserData() { return get(/databases/$(database)/documents/users/$(request.auth.uid)).data; }
+    function isAdmin() { return isAuthenticated() && getUserData().role == 'admin'; }
+    function isLeader() { return isAuthenticated() && (getUserData().role == 'leader' || getUserData().role == 'admin'); }
+
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isOwner(userId) || isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    match /schedules/{scheduleId} {
+      allow read: if isAuthenticated();
+      allow create, delete: if isLeader();
+      allow update: if isLeader() || (
+        isAuthenticated() && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['assignments'])
+      );
+    }
+  }
+}
